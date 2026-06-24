@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>سُكرة ميني — جهاز مراقبة السكر المستمر</title>
+<meta name="description" content="سُكرة ميني: جهاز مراقبة السكر المستمر بشاشة دائرية أنيقة ١.٨٥ بوصة، مع تنبيهات فورية ومزامنة عبر الواي‑فاي." />
+<meta name="theme-color" content="#f7fbfc" />
+<meta property="og:title" content="سُكرة ميني — جهاز مراقبة السكر المستمر" />
+<meta property="og:description" content="قراءاتك على شاشة دائرية أنيقة، مع تنبيهات فورية تطمئنك في كل لحظة." />
+<meta property="og:locale" content="ar_SA" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal:#009494;
+    --teal2:#00b5b5;
+    --bg:#f7fbfc;
+    --card:#ffffff;
+    --ink:#161e26;
+    --muted:#62707b;
+    --line:#dee4e7;
+    --ok:#0fa05c;
+    --danger:#dd2d34;
+    --tint:#dcf4f4;
+    --radius:16px;
+    --radius-lg:24px;
+    /* Layered, low-opacity shadows for a clinical, premium feel */
+    --shadow-sm:0 1px 2px rgba(22,30,38,.04),0 4px 16px rgba(22,30,38,.045);
+    --shadow-md:0 6px 22px rgba(0,148,148,.06),0 14px 40px rgba(22,30,38,.045);
+    --shadow-lg:0 18px 50px rgba(0,148,148,.08),0 4px 14px rgba(22,30,38,.035);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Tajawal',system-ui,-apple-system,'Segoe UI',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+
+  a{color:inherit;text-decoration:none;}
+  img,svg{display:block;max-width:100%;}
+
+  :focus-visible{outline:3px solid rgba(0,181,181,.45);outline-offset:3px;border-radius:6px;}
+
+  .wrap{width:100%;max-width:1160px;margin-inline:auto;padding-inline:22px;}
+
+  .skip{
+    position:absolute;inset-inline-start:-9999px;top:0;z-index:100;
+    background:var(--teal);color:#fff;padding:.7rem 1.2rem;border-radius:0 0 12px 0;font-weight:700;
+  }
+  .skip:focus{inset-inline-start:0;}
+
+  /* ===== Buttons ===== */
+  .btn-primary,
+  .btn-ghost{
+    display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+    font-family:inherit;font-weight:700;font-size:1.02rem;
+    padding:.85rem 1.7rem;border-radius:999px;cursor:pointer;
+    border:2px solid transparent;transition:transform .18s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--teal2),var(--teal));
+    color:#fff;box-shadow:0 8px 20px rgba(0,148,148,.22);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(0,148,148,.28);}
+  .btn-primary:active{transform:translateY(0);}
+  .btn-ghost{
+    background:#fff;color:var(--teal);border-color:var(--line);
+  }
+  .btn-ghost:hover{transform:translateY(-2px);border-color:var(--teal2);background:var(--tint);}
+  .btn-sm{padding:.6rem 1.2rem;font-size:.95rem;}
+
+  /* ===== Nav ===== */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(247,251,252,.82);
+    backdrop-filter:saturate(180%) blur(14px);
+    -webkit-backdrop-filter:saturate(180%) blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;height:72px;}
+  .logo{display:flex;align-items:center;gap:.55rem;font-weight:800;font-size:1.45rem;color:var(--ink);}
+  .logo .dot{
+    width:16px;height:18px;
+    background:linear-gradient(160deg,var(--teal2),var(--teal));
+    border-radius:60% 60% 60% 60% / 80% 80% 50% 50%;
+    transform:rotate(-2deg);
+    box-shadow:0 4px 10px rgba(0,148,148,.4), inset 0 -3px 5px rgba(0,0,0,.12), inset 2px 3px 4px rgba(255,255,255,.5);
+  }
+  .nav-links{display:flex;align-items:center;gap:1.9rem;}
+  .nav-links a{color:var(--muted);font-weight:500;font-size:1rem;transition:color .2s;}
+  .nav-links a:hover{color:var(--teal);}
+  .nav-cta{display:flex;align-items:center;gap:.8rem;}
+  .menu-btn{display:none;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.5rem;cursor:pointer;line-height:0;}
+  .menu-btn svg{width:24px;height:24px;stroke:var(--ink);fill:none;}
+
+  /* ===== Hero ===== */
+  .hero{position:relative;padding:96px 0 72px;overflow:hidden;}
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:-1;
+    background:
+      radial-gradient(720px 520px at 90% 0%, rgba(0,181,181,.07), transparent 72%),
+      radial-gradient(620px 520px at 4% 26%, rgba(220,244,244,.45), transparent 68%);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
+  .pill{
+    display:inline-flex;align-items:center;gap:.5rem;
+    background:#fff;border:1px solid var(--line);color:var(--teal);
+    font-weight:700;font-size:.9rem;padding:.45rem 1rem;border-radius:999px;
+    box-shadow:var(--shadow-sm);margin-bottom:1.4rem;
+  }
+  .pill .ping{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(15,160,92,.5);animation:ping 2.2s infinite;}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(15,160,92,.45);}70%{box-shadow:0 0 0 8px rgba(15,160,92,0);}100%{box-shadow:0 0 0 0 rgba(15,160,92,0);}}
+
+  .hero h1{
+    font-size:clamp(3rem,8vw,5.2rem);font-weight:900;line-height:1.05;letter-spacing:-1.2px;
+    margin-bottom:1.1rem;
+  }
+  .hero h1 .accent{
+    background:linear-gradient(120deg,var(--teal2),var(--teal));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.sub{font-size:clamp(1.18rem,2vw,1.36rem);color:var(--muted);max-width:35rem;margin-bottom:2.1rem;}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:.9rem;}
+  .hero-trust{display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:2.2rem;color:var(--muted);font-size:.95rem;}
+  .hero-trust span{display:flex;align-items:center;gap:.45rem;font-weight:500;}
+  .hero-trust svg{width:18px;height:18px;stroke:var(--ok);fill:none;}
+
+  /* Device mockup */
+  .device-stage{position:relative;display:flex;justify-content:center;align-items:center;min-height:460px;}
+  .device-stage::after{
+    content:"";position:absolute;width:78%;height:78%;border-radius:50%;
+    background:radial-gradient(circle, rgba(0,181,181,.13), transparent 70%);
+    filter:blur(40px);z-index:0;animation:floatGlow 9s ease-in-out infinite;
+  }
+  @keyframes floatGlow{0%,100%{transform:scale(1);opacity:.6;}50%{transform:scale(1.04);opacity:.8;}}
+  .device{position:relative;z-index:2;width:min(390px,80vw);animation:floatDev 8s ease-in-out infinite;filter:drop-shadow(0 30px 50px rgba(8,13,17,.22));}
+  @keyframes floatDev{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+  .float-card{
+    position:absolute;z-index:3;background:rgba(255,255,255,.94);border:1px solid var(--line);
+    border-radius:16px;box-shadow:var(--shadow-md);padding:.7rem .95rem;backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    display:flex;align-items:center;gap:.65rem;font-weight:700;animation:floatDev 8s ease-in-out infinite;
+  }
+  .float-card .fc-ico{flex:none;width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;}
+  .float-card .fc-ico svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+  .float-card small{display:block;font-size:.74rem;font-weight:600;color:var(--muted);line-height:1.2;}
+  .float-card b{font-size:1rem;color:var(--ink);}
+  .fc-ok{top:7%;inset-inline-start:-3%;animation-delay:.6s;}
+  .fc-ok .fc-ico{background:var(--ok);}
+  .fc-alert{bottom:11%;inset-inline-end:-4%;animation-delay:2.4s;}
+  .fc-alert .fc-ico{background:linear-gradient(135deg,var(--teal2),var(--teal));}
+
+  /* ===== Section base ===== */
+  section{padding:96px 0;}
+  .sec-head{text-align:center;max-width:42rem;margin:0 auto 60px;}
+  .sec-tag{color:var(--teal);font-weight:700;font-size:.95rem;letter-spacing:.5px;display:block;margin-bottom:.6rem;}
+  .sec-head h2{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:900;letter-spacing:-.4px;margin-bottom:.8rem;}
+  .sec-head p{color:var(--muted);font-size:1.12rem;}
+
+  /* ===== Features ===== */
+  .features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .feature{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:32px 26px;box-shadow:var(--shadow-sm);transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .feature:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--tint);}
+  .feature .ico{
+    width:60px;height:60px;border-radius:18px;display:flex;align-items:center;justify-content:center;
+    background:var(--tint);margin-bottom:18px;
+  }
+  .feature .ico svg{width:30px;height:30px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .feature h3{font-size:1.22rem;font-weight:800;margin-bottom:.5rem;line-height:1.45;}
+  .feature p{color:var(--muted);font-size:1rem;}
+
+  /* ===== How it works ===== */
+  .how{background:linear-gradient(180deg,rgba(220,244,244,.42),rgba(220,244,244,.1));}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;position:relative;}
+  .step{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:38px 28px;text-align:center;box-shadow:var(--shadow-sm);position:relative;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .step:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+  .step .num{
+    width:64px;height:64px;margin:0 auto 18px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.7rem;font-weight:900;color:#fff;
+    background:linear-gradient(135deg,var(--teal2),var(--teal));
+    box-shadow:0 8px 18px rgba(0,148,148,.24);
+  }
+  .step h3{font-size:1.25rem;font-weight:800;margin-bottom:.5rem;}
+  .step p{color:var(--muted);}
+
+  /* ===== Activation ===== */
+  .activate-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-lg);padding:clamp(28px,5vw,52px);position:relative;overflow:hidden;
+  }
+  .activate-card::before{
+    content:"";position:absolute;top:-80px;inset-inline-start:-80px;width:260px;height:260px;border-radius:50%;
+    background:radial-gradient(circle,rgba(0,181,181,.1),transparent 70%);
+  }
+  .activate-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;position:relative;z-index:1;}
+  .activate-info h2{font-size:clamp(1.8rem,3.6vw,2.5rem);font-weight:900;margin-bottom:.7rem;letter-spacing:-.3px;}
+  .activate-lead{font-size:1.12rem;color:var(--muted);margin-bottom:28px;}
+  .mini-steps{list-style:none;display:flex;flex-direction:column;gap:16px;}
+  .mini-steps li{display:flex;align-items:flex-start;gap:14px;font-weight:500;}
+  .mini-steps .mn{
+    flex:none;width:38px;height:38px;border-radius:12px;background:var(--tint);color:var(--teal);
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.05rem;
+  }
+  .mini-steps li strong{display:block;font-weight:800;color:var(--ink);margin-bottom:.1rem;}
+  .mini-steps li small{color:var(--muted);font-weight:500;font-size:.95rem;}
+
+  .flash-box{
+    background:linear-gradient(160deg,#fff,var(--tint));
+    border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:36px 30px;text-align:center;box-shadow:var(--shadow-sm);
+  }
+  .flash-box .usb{
+    width:72px;height:72px;margin:0 auto 16px;border-radius:50%;
+    background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--shadow-sm);
+  }
+  .flash-box .usb svg{width:36px;height:36px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .flash-box h3{font-size:1.4rem;font-weight:900;margin-bottom:.4rem;}
+  .flash-box p.muted{color:var(--muted);margin-bottom:24px;}
+
+  /* Style esp-web-tools button to match primary */
+  esp-web-install-button{display:block;}
+  esp-web-install-button .btn-primary{width:100%;font-size:1.12rem;padding:1rem 1.7rem;}
+  esp-web-install-button [slot="unsupported"],
+  esp-web-install-button [slot="not-allowed"]{
+    display:block;margin-top:14px;color:var(--danger);font-size:.95rem;font-weight:500;
+    background:#fdeced;border-radius:12px;padding:.7rem 1rem;line-height:1.6;
+  }
+  .register-row{margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .register-link{
+    display:inline-flex;align-items:center;gap:.5rem;color:var(--teal);font-weight:700;
+    border:2px solid var(--line);border-radius:999px;padding:.7rem 1.5rem;transition:all .2s;
+  }
+  .register-link:hover{background:var(--tint);border-color:var(--teal2);transform:translateY(-2px);}
+  .register-link svg{stroke:currentColor;fill:none;}
+  .compat-note{
+    display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.88rem;
+    margin-top:4px;
+  }
+  .compat-note svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;}
+
+  /* ===== Footer ===== */
+  footer{background:var(--card);color:var(--muted);padding:60px 0 32px;border-top:1px solid var(--line);}
+  .foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;margin-bottom:36px;}
+  footer .logo{color:var(--ink);}
+  .foot-tag{color:var(--muted);max-width:24rem;margin-top:.7rem;}
+  .foot-links{display:flex;gap:1.8rem;flex-wrap:wrap;}
+  .foot-links a{color:var(--muted);font-weight:500;transition:color .2s;}
+  .foot-links a:hover{color:var(--teal);}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:.92rem;}
+
+  /* ===== Responsive ===== */
+  @media (max-width:900px){
+    .nav-links{
+      display:none;position:absolute;top:72px;inset-inline-end:14px;
+      flex-direction:column;align-items:flex-start;gap:0;
+      background:#fff;border:1px solid var(--line);border-radius:16px;
+      box-shadow:var(--shadow-md);padding:.4rem;min-width:200px;
+    }
+    .nav-links.open{display:flex;}
+    .nav-links a{width:100%;padding:.7rem 1rem;border-radius:10px;}
+    .nav-links a:hover{background:var(--tint);}
+    .menu-btn{display:flex;}
+    .hero{padding:64px 0 56px;}
+    .hero-grid{grid-template-columns:1fr;text-align:center;gap:40px;}
+    .hero p.sub{margin-inline:auto;}
+    .hero-actions,.hero-trust{justify-content:center;}
+    .device-stage{order:-1;min-height:380px;}
+    .features-grid{grid-template-columns:repeat(2,1fr);}
+    .steps{grid-template-columns:1fr;}
+    .activate-grid{grid-template-columns:1fr;}
+    section{padding:72px 0;}
+  }
+  @media (max-width:560px){
+    .features-grid{grid-template-columns:1fr;}
+    .hero-actions .btn-primary,.hero-actions .btn-ghost{flex:1;}
+    section{padding:56px 0;}
+    .float-card{display:none;}
+    .hero-trust{gap:1rem;font-size:.9rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;scroll-behavior:auto!important;transition:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<a href="#features" class="skip">تخطَّ إلى المحتوى</a>
+
+<!-- ===== NAV ===== -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo" aria-label="سُكرة — الصفحة الرئيسية">
+      <span class="dot" aria-hidden="true"></span>
+      <span>سُكرة</span>
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="التنقل الرئيسي">
+      <a href="#features">المميزات</a>
+      <a href="#how">كيف يعمل</a>
+      <a href="#activate">فعّل جهازك</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#activate" class="btn-primary btn-sm">فعّل جهازك</a>
+      <button class="menu-btn" id="menuBtn" aria-label="فتح القائمة" aria-expanded="false" aria-controls="navLinks">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="pill"><span class="ping" aria-hidden="true"></span> مراقبة مستمرة على مدار الساعة</span>
+      <h1>سُكرة <span class="accent">ميني</span></h1>
+      <p class="sub">جهاز مراقبة السكر المستمر — قراءاتك على شاشة دائرية أنيقة، مع تنبيهات فورية تطمئنك في كل لحظة.</p>
+      <div class="hero-actions">
+        <a href="#activate" class="btn-primary">فعّل جهازك</a>
+        <a href="#features" class="btn-ghost">اعرف أكثر</a>
+      </div>
+      <div class="hero-trust">
+        <span><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> بدون تثبيت برامج</span>
+        <span><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> مزامنة عبر الواي‑فاي</span>
+        <span><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> تنبيهات لحظية</span>
+      </div>
+    </div>
+
+    <!-- Round device mockup -->
+    <div class="device-stage">
+      <div class="float-card fc-ok" role="img" aria-label="الحالة: ضمن النطاق">
+        <span class="fc-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <span><small>الحالة</small><b>ضمن النطاق</b></span>
+      </div>
+      <div class="float-card fc-alert" role="img" aria-label="تنبيه ذكي قبل الانخفاض">
+        <span class="fc-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>
+        <span><small>تنبيه ذكي</small><b>قبل الانخفاض</b></span>
+      </div>
+      <svg class="device" viewBox="0 0 360 360" role="img" aria-label="جهاز سُكرة ميني يعرض قراءة سكر ١١٢ ملغم لكل ديسيلتر ضمن النطاق">
+        <defs>
+          <radialGradient id="bezel" cx="50%" cy="34%" r="72%">
+            <stop offset="0%" stop-color="#46535e"/>
+            <stop offset="46%" stop-color="#2a343c"/>
+            <stop offset="78%" stop-color="#161e25"/>
+            <stop offset="100%" stop-color="#070c10"/>
+          </radialGradient>
+          <linearGradient id="bezelEdge" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5d6b76"/>
+            <stop offset="50%" stop-color="#2c363e"/>
+            <stop offset="100%" stop-color="#0a0f13"/>
+          </linearGradient>
+          <radialGradient id="face" cx="50%" cy="32%" r="78%">
+            <stop offset="0%" stop-color="#1c2832"/>
+            <stop offset="70%" stop-color="#0c1318"/>
+            <stop offset="100%" stop-color="#06090c"/>
+          </radialGradient>
+          <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+            <stop offset="34%" stop-color="#ffffff" stop-opacity="0.02"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#00d6c2"/>
+            <stop offset="100%" stop-color="#009494"/>
+          </linearGradient>
+          <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="6"/>
+          </filter>
+        </defs>
+
+        <!-- subtle outer glow -->
+        <circle cx="180" cy="180" r="170" fill="#00b5b5" opacity="0.07" filter="url(#soft)"/>
+
+        <!-- side button -->
+        <rect x="349" y="150" width="13" height="62" rx="6" fill="url(#bezelEdge)"/>
+        <rect x="349" y="158" width="13" height="14" rx="5" fill="#586672" opacity="0.5"/>
+
+        <!-- metal bezel -->
+        <circle cx="180" cy="180" r="162" fill="url(#bezelEdge)"/>
+        <circle cx="180" cy="180" r="158" fill="url(#bezel)"/>
+        <circle cx="180" cy="180" r="158" fill="none" stroke="#5a6772" stroke-width="1.5" opacity="0.4"/>
+        <!-- specular highlight on bezel -->
+        <path d="M70 70 A158 158 0 0 1 290 70" fill="none" stroke="#8b98a2" stroke-width="3" stroke-linecap="round" opacity="0.28" filter="url(#soft)"/>
+
+        <!-- dark glass face -->
+        <circle cx="180" cy="180" r="140" fill="url(#face)"/>
+        <circle cx="180" cy="180" r="140" fill="none" stroke="#000" stroke-width="3" opacity="0.55"/>
+
+        <!-- progress ring (in-range arc) -->
+        <circle cx="180" cy="180" r="123" fill="none" stroke="#1c262e" stroke-width="9"/>
+        <circle cx="180" cy="180" r="123" fill="none" stroke="url(#ring)" stroke-width="9"
+                stroke-linecap="round" stroke-dasharray="555 773"
+                transform="rotate(-90 180 180)"/>
+
+        <!-- reading -->
+        <text x="180" y="170" text-anchor="middle" fill="#ffffff" font-family="Tajawal, sans-serif" font-weight="900" font-size="92" letter-spacing="-2">112</text>
+        <!-- trend arrow -->
+        <g transform="translate(250 138)" stroke="#19e0a6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <line x1="0" y1="22" x2="0" y2="-8"/>
+          <polyline points="-11,3 0,-9 11,3"/>
+        </g>
+        <text x="180" y="206" text-anchor="middle" fill="#7e8c97" font-family="Tajawal, sans-serif" font-weight="700" font-size="24" letter-spacing="2">mg/dL</text>
+
+        <!-- in-range badge -->
+        <g transform="translate(180 248)">
+          <rect x="-66" y="-22" width="132" height="44" rx="22" fill="#0fa05c" opacity="0.16"/>
+          <circle cx="-44" cy="0" r="6" fill="#0fa05c"/>
+          <text x="14" y="8" text-anchor="middle" fill="#28d17f" font-family="Tajawal, sans-serif" font-weight="800" font-size="24">ضمن النطاق</text>
+        </g>
+
+        <!-- top label -->
+        <text x="180" y="92" text-anchor="middle" fill="#566570" font-family="Tajawal, sans-serif" font-weight="700" font-size="20" letter-spacing="1">سُكرة</text>
+
+        <!-- glass reflection overlay -->
+        <circle cx="180" cy="180" r="140" fill="url(#glass)" pointer-events="none"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">المميزات</span>
+      <h2>كل ما تحتاجه في جهاز واحد</h2>
+      <p>صُمِّم سُكرة ميني ليمنحك الاطمئنان: قراءات دقيقة، تنبيهات في وقتها، وتجربة بسيطة وأنيقة.</p>
+    </div>
+    <div class="features-grid">
+      <article class="feature">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <h3>مراقبة مستمرة ٢٤/٧</h3>
+        <p>متابعة دقيقة لمستوى السكر طوال اليوم والليل دون انقطاع.</p>
+      </article>
+      <article class="feature">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+        <h3>تنبيهات ذكية للارتفاع والانخفاض</h3>
+        <p>إشعارات فورية عند تجاوز النطاق الآمن لتتصرّف في الوقت المناسب.</p>
+      </article>
+      <article class="feature">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>شاشة دائرية ١.٨٥ بوصة</h3>
+        <p>عرض واضح وأنيق بألوان زاهية يسهل قراءته بنظرة واحدة.</p>
+      </article>
+      <article class="feature">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div>
+        <h3>واي‑فاي ومزامنة فورية</h3>
+        <p>اتصال لاسلكي يحفظ قراءاتك ويزامنها مع حسابك لحظيًا.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section id="how" class="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">كيف يعمل</span>
+      <h2>ابدأ في ثلاث خطوات بسيطة</h2>
+      <p>من الصندوق إلى أول قراءة في دقائق — بدون تعقيد.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num" aria-hidden="true">١</div>
+        <h3>وصّل الجهاز بالواي‑فاي</h3>
+        <p>شغّل سُكرة ميني واختر شبكتك المنزلية ليتصل بالإنترنت.</p>
+      </div>
+      <div class="step">
+        <div class="num" aria-hidden="true">٢</div>
+        <h3>اربط حسابك والحساس</h3>
+        <p>سجّل دخولك واربط الحساس بجهازك بخطوات سهلة وموجّهة.</p>
+      </div>
+      <div class="step">
+        <div class="num" aria-hidden="true">٣</div>
+        <h3>تابع قراءاتك لحظيًا</h3>
+        <p>راقب مستوى السكر على الشاشة الدائرية واستقبل التنبيهات فورًا.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ACTIVATION ===== -->
+<section id="activate">
+  <div class="wrap">
+    <div class="activate-card">
+      <div class="activate-grid">
+        <div class="activate-info">
+          <span class="sec-tag">التفعيل</span>
+          <h2>فعّل جهازك وحدّث الفِرموِير</h2>
+          <p class="activate-lead">اشتريت سُكرة ميني من الوكالة؟ وصّله بالكمبيوتر وحدّث فِرموِيره وفعّله — كل ذلك من متصفحك مباشرة، بدون أي برامج.</p>
+          <ol class="mini-steps">
+            <li>
+              <span class="mn" aria-hidden="true">١</span>
+              <div><strong>وصّل بمنفذ USB</strong><small>اربط الجهاز بالكمبيوتر باستخدام كابل USB.</small></div>
+            </li>
+            <li>
+              <span class="mn" aria-hidden="true">٢</span>
+              <div><strong>اضغط «ابدأ الفلَش» واختر المنفذ</strong><small>سيطلب المتصفح اختيار منفذ الجهاز للبدء.</small></div>
+            </li>
+            <li>
+              <span class="mn" aria-hidden="true">٣</span>
+              <div><strong>بعد الفلَش سجّل جهازك</strong><small>أكمل التسجيل لربط الجهاز بحسابك وتفعيله.</small></div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="flash-box">
+          <div class="usb" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="10" cy="7" r="1"/><circle cx="4" cy="20" r="1"/><path d="M4.7 19.3 19 5"/><path d="m21 3-3 1 2 2 1-3Z"/><path d="M9.26 7.68 5.5 11.44l1.78 1.78"/><path d="m12.5 11.5-2 2"/><path d="m14.5 13.5 3.76-3.76 1.78 1.78"/></svg>
+          </div>
+          <h3>جاهز للفلَش</h3>
+          <p class="muted">اضغط الزر وابدأ التحديث مباشرة من المتصفح.</p>
+
+          <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+          <esp-web-install-button manifest="./manifest.json">
+            <button slot="activate" class="btn-primary">⚡ ابدأ الفلَش</button>
+            <span slot="unsupported">متصفحك لا يدعم الفلَش — استخدم Chrome أو Edge على كمبيوتر (ليس الجوال).</span>
+            <span slot="not-allowed">افتح الصفحة عبر HTTPS لتفعيل الفلَش.</span>
+          </esp-web-install-button>
+
+          <div class="register-row">
+            <a class="register-link" href="https://tqfaleh.github.io/glucose-bridge-console/setup/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+              سجّل جهازك
+            </a>
+            <span class="compat-note">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              يعمل على Chrome أو Edge على كمبيوتر
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a href="#" class="logo"><span class="dot" aria-hidden="true"></span><span>سُكرة</span></a>
+        <p class="foot-tag">سُكرة — رفيقك لمراقبة السكر. تجربة بسيطة وأنيقة تمنحك الاطمئنان في كل لحظة.</p>
+      </div>
+      <nav class="foot-links" aria-label="روابط التذييل">
+        <a href="#features">المميزات</a>
+        <a href="#how">كيف يعمل</a>
+        <a href="#activate">فعّل جهازك</a>
+        <a href="https://tqfaleh.github.io/glucose-bridge-console/setup/" target="_blank" rel="noopener">سجّل جهازك</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> سُكرة. جميع الحقوق محفوظة.</span>
+      <span>صُنع بعناية لصحتك</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  (function(){
+    var btn = document.getElementById('menuBtn');
+    var links = document.getElementById('navLinks');
+    btn.addEventListener('click', function(){
+      var open = links.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'إغلاق القائمة' : 'فتح القائمة');
+    });
+    links.addEventListener('click', function(e){
+      if(e.target.tagName === 'A'){
+        links.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+        btn.setAttribute('aria-label','فتح القائمة');
+      }
+    });
+  })();
+</script>
+</body>
+</html>
