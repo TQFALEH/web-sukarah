@@ -405,31 +405,33 @@
         <circle cx="180" cy="180" r="140" fill="url(#face)"/>
         <circle cx="180" cy="180" r="140" fill="none" stroke="#000" stroke-width="3" opacity="0.55"/>
 
-        <!-- ===== واجهة سُكرة الحقيقية (شاشة الميني) ===== -->
+        <!-- ===== واجهة سُكرة الحقيقية (تتبدّل حسب الحالة) ===== -->
         <!-- عدّاد قوسي ٣ مناطق: أحمر أسفل‑يسار · أخضر فوق · برتقالي أسفل‑يمين -->
         <g fill="none" stroke-width="16" stroke-linecap="round">
           <path d="M95.1 264.9 A120 120 0 0 1 60.5 169.5" stroke="#FF453A"/>
           <path d="M60.5 169.5 A120 120 0 0 1 299.5 169.5" stroke="#30D158"/>
           <path d="M299.5 169.5 A120 120 0 0 1 264.9 264.9" stroke="#FF9F0A"/>
         </g>
-        <!-- المؤشّر المتحرّك (أبيض + حدّ أخضر) عند ١١٢ ضمن النطاق -->
-        <circle cx="139" cy="67" r="11" fill="#ffffff" stroke="#30D158" stroke-width="4.5"/>
-        <!-- حدّا النطاق ٧٠ / ١٨٠ -->
-        <text x="58" y="206" text-anchor="middle" fill="#FF453A" font-family="Tajawal,sans-serif" font-weight="700" font-size="21" direction="ltr">70</text>
-        <text x="302" y="206" text-anchor="middle" fill="#FF9F0A" font-family="Tajawal,sans-serif" font-weight="700" font-size="21" direction="ltr">180</text>
+        <!-- حدّا النطاق على البار عند حدّي المناطق -->
+        <text x="82" y="176" text-anchor="middle" fill="#FF453A" font-family="Tajawal,sans-serif" font-weight="800" font-size="17" direction="ltr">70</text>
+        <text x="278" y="176" text-anchor="middle" fill="#FF9F0A" font-family="Tajawal,sans-serif" font-weight="800" font-size="17" direction="ltr">180</text>
+        <!-- المؤشّر المتحرّك (يتحرّك على القوس حسب القيمة) -->
+        <circle id="dDot" cx="139" cy="67" r="11" fill="#ffffff" stroke="#30D158" stroke-width="4.5" style="transition:cx .6s ease,cy .6s ease,stroke .45s ease"/>
         <!-- الحالة -->
-        <text x="180" y="104" text-anchor="middle" fill="#30D158" font-family="Tajawal,sans-serif" font-weight="800" font-size="23">مستقر</text>
-        <!-- الرقم العملاق (أخضر = ضمن النطاق) -->
-        <text x="180" y="200" text-anchor="middle" fill="#30D158" font-family="Tajawal,sans-serif" font-weight="900" font-size="92" letter-spacing="-2" direction="ltr">112</text>
-        <!-- سهم الاتجاه (مستقر → ) -->
-        <g transform="translate(256 162)" stroke="#30D158" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
-          <line x1="-13" y1="0" x2="13" y2="0"/>
-          <polyline points="5,-9 14,0 5,9"/>
+        <text id="dStatus" x="180" y="104" text-anchor="middle" fill="#30D158" font-family="Tajawal,sans-serif" font-weight="800" font-size="23" style="transition:fill .45s ease">مستقر</text>
+        <!-- الرقم العملاق -->
+        <text id="dValue" x="180" y="200" text-anchor="middle" fill="#30D158" font-family="Tajawal,sans-serif" font-weight="900" font-size="92" letter-spacing="-2" direction="ltr" style="transition:fill .45s ease">112</text>
+        <!-- سهم الاتجاه (يدور حسب الحالة: → مستقر · ↑ مرتفع · ↓ منخفض) -->
+        <g transform="translate(256 162)">
+          <g id="dArrow" stroke="#30D158" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" style="transition:stroke .45s ease, transform .45s ease;transform-box:fill-box;transform-origin:center">
+            <line x1="-13" y1="0" x2="13" y2="0"/>
+            <polyline points="5,-9 14,0 5,9"/>
+          </g>
         </g>
         <!-- الوحدة -->
         <text x="180" y="243" text-anchor="middle" fill="#9AA2AE" font-family="Tajawal,sans-serif" font-weight="700" font-size="20" letter-spacing="1" direction="ltr">mg/dL</text>
         <!-- الوصف -->
-        <text x="180" y="272" text-anchor="middle" fill="#7B8492" font-family="Tajawal,sans-serif" font-weight="500" font-size="16">ضمن النطاق الطبيعي</text>
+        <text id="dDesc" x="180" y="272" text-anchor="middle" fill="#7B8492" font-family="Tajawal,sans-serif" font-weight="500" font-size="16">ضمن النطاق الطبيعي</text>
         <!-- شريط الحالة السفلي: ساعة · واي‑فاي · بطارية -->
         <text x="180" y="307" text-anchor="middle" fill="#9AA2AE" font-family="Tajawal,sans-serif" font-weight="700" font-size="15" direction="ltr">10:24</text>
         <g transform="translate(132 300)" stroke="#9AA2AE" stroke-width="2" fill="none" stroke-linecap="round">
@@ -605,6 +607,34 @@
         btn.setAttribute('aria-label','فتح القائمة');
       }
     });
+  })();
+
+  /* تحريك شاشة الجهاز بين الحالات: مستقر → مرتفع → منخفض */
+  (function(){
+    var val = document.getElementById('dValue');
+    if(!val) return;
+    var stt = document.getElementById('dStatus'), dsc = document.getElementById('dDesc'),
+        dot = document.getElementById('dDot'), arr = document.getElementById('dArrow'),
+        lbl = document.querySelector('.device'), fcOk = document.querySelector('.fc-ok');
+    var S = [
+      { v:'112', t:'مستقر', d:'ضمن النطاق الطبيعي', c:'#30D158', x:139, y:67,  r:0,   a:'قراءة ١١٢ ضمن النطاق' },
+      { v:'215', t:'مرتفع', d:'أعلى من النطاق',     c:'#FF9F0A', x:293, y:221, r:-90, a:'قراءة ٢١٥ مرتفعة' },
+      { v:'58',  t:'منخفض', d:'أقل من النطاق',      c:'#FF453A', x:71,  y:231, r:90,  a:'قراءة ٥٨ منخفضة' }
+    ];
+    function set(s){
+      val.textContent = s.v; val.style.fill = s.c;
+      stt.textContent = s.t; stt.style.fill = s.c;
+      dsc.textContent = s.d;
+      dot.style.cx = s.x + 'px'; dot.style.cy = s.y + 'px'; dot.style.stroke = s.c;
+      arr.style.stroke = s.c; arr.style.transform = 'rotate(' + s.r + 'deg)';
+      if(lbl) lbl.setAttribute('aria-label', 'جهاز سُكرة ميني — ' + s.a);
+      if(fcOk){ var b = fcOk.querySelector('b'); if(b) b.textContent = s.t;
+        var ic = fcOk.querySelector('.fc-ico'); if(ic) ic.style.background = s.c;
+        fcOk.style.transition = 'color .45s ease'; }
+    }
+    var i = 0; set(S[0]);
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches;
+    if(!reduce){ setInterval(function(){ i = (i + 1) % S.length; set(S[i]); }, 2800); }
   })();
 </script>
 </body>
