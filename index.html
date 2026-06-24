@@ -405,30 +405,42 @@
         <circle cx="180" cy="180" r="140" fill="url(#face)"/>
         <circle cx="180" cy="180" r="140" fill="none" stroke="#000" stroke-width="3" opacity="0.55"/>
 
-        <!-- progress ring (in-range arc) -->
-        <circle cx="180" cy="180" r="123" fill="none" stroke="#1c262e" stroke-width="9"/>
-        <circle cx="180" cy="180" r="123" fill="none" stroke="url(#ring)" stroke-width="9"
-                stroke-linecap="round" stroke-dasharray="555 773"
-                transform="rotate(-90 180 180)"/>
-
-        <!-- reading -->
-        <text x="180" y="170" text-anchor="middle" fill="#ffffff" font-family="Tajawal, sans-serif" font-weight="900" font-size="92" letter-spacing="-2">112</text>
-        <!-- trend arrow -->
-        <g transform="translate(250 138)" stroke="#19e0a6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
-          <line x1="0" y1="22" x2="0" y2="-8"/>
-          <polyline points="-11,3 0,-9 11,3"/>
+        <!-- ===== واجهة سُكرة الحقيقية (شاشة الميني) ===== -->
+        <!-- عدّاد قوسي ٣ مناطق: أحمر أسفل‑يسار · أخضر فوق · برتقالي أسفل‑يمين -->
+        <g fill="none" stroke-width="16" stroke-linecap="round">
+          <path d="M95.1 264.9 A120 120 0 0 1 60.5 169.5" stroke="#FF453A"/>
+          <path d="M60.5 169.5 A120 120 0 0 1 299.5 169.5" stroke="#30D158"/>
+          <path d="M299.5 169.5 A120 120 0 0 1 264.9 264.9" stroke="#FF9F0A"/>
         </g>
-        <text x="180" y="206" text-anchor="middle" fill="#7e8c97" font-family="Tajawal, sans-serif" font-weight="700" font-size="24" letter-spacing="2">mg/dL</text>
-
-        <!-- in-range badge -->
-        <g transform="translate(180 248)">
-          <rect x="-66" y="-22" width="132" height="44" rx="22" fill="#0fa05c" opacity="0.16"/>
-          <circle cx="-44" cy="0" r="6" fill="#0fa05c"/>
-          <text x="14" y="8" text-anchor="middle" fill="#28d17f" font-family="Tajawal, sans-serif" font-weight="800" font-size="24">ضمن النطاق</text>
+        <!-- المؤشّر المتحرّك (أبيض + حدّ أخضر) عند ١١٢ ضمن النطاق -->
+        <circle cx="139" cy="67" r="11" fill="#ffffff" stroke="#30D158" stroke-width="4.5"/>
+        <!-- حدّا النطاق ٧٠ / ١٨٠ -->
+        <text x="58" y="206" text-anchor="middle" fill="#FF453A" font-family="Tajawal,sans-serif" font-weight="700" font-size="21" direction="ltr">70</text>
+        <text x="302" y="206" text-anchor="middle" fill="#FF9F0A" font-family="Tajawal,sans-serif" font-weight="700" font-size="21" direction="ltr">180</text>
+        <!-- الحالة -->
+        <text x="180" y="104" text-anchor="middle" fill="#30D158" font-family="Tajawal,sans-serif" font-weight="800" font-size="23">مستقر</text>
+        <!-- الرقم العملاق (أخضر = ضمن النطاق) -->
+        <text x="180" y="200" text-anchor="middle" fill="#30D158" font-family="Tajawal,sans-serif" font-weight="900" font-size="92" letter-spacing="-2" direction="ltr">112</text>
+        <!-- سهم الاتجاه (مستقر → ) -->
+        <g transform="translate(256 162)" stroke="#30D158" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <line x1="-13" y1="0" x2="13" y2="0"/>
+          <polyline points="5,-9 14,0 5,9"/>
         </g>
-
-        <!-- top label -->
-        <text x="180" y="92" text-anchor="middle" fill="#566570" font-family="Tajawal, sans-serif" font-weight="700" font-size="20" letter-spacing="1">سُكرة</text>
+        <!-- الوحدة -->
+        <text x="180" y="243" text-anchor="middle" fill="#9AA2AE" font-family="Tajawal,sans-serif" font-weight="700" font-size="20" letter-spacing="1" direction="ltr">mg/dL</text>
+        <!-- الوصف -->
+        <text x="180" y="272" text-anchor="middle" fill="#7B8492" font-family="Tajawal,sans-serif" font-weight="500" font-size="16">ضمن النطاق الطبيعي</text>
+        <!-- شريط الحالة السفلي: ساعة · واي‑فاي · بطارية -->
+        <text x="180" y="307" text-anchor="middle" fill="#9AA2AE" font-family="Tajawal,sans-serif" font-weight="700" font-size="15" direction="ltr">10:24</text>
+        <g transform="translate(132 300)" stroke="#9AA2AE" stroke-width="2" fill="none" stroke-linecap="round">
+          <path d="M-6 -1 A8 8 0 0 1 6 -1"/><path d="M-3.4 2 A4 4 0 0 1 3.4 2"/>
+          <circle cx="0" cy="5" r="1.3" fill="#9AA2AE" stroke="none"/>
+        </g>
+        <g transform="translate(212 295)">
+          <rect x="0" y="0" width="18" height="10" rx="2.5" fill="none" stroke="#9AA2AE" stroke-width="1.5"/>
+          <rect x="18.6" y="3" width="2" height="4" rx="1" fill="#9AA2AE"/>
+          <rect x="2" y="2" width="11" height="6" rx="1" fill="#30D158"/>
+        </g>
 
         <!-- glass reflection overlay -->
         <circle cx="180" cy="180" r="140" fill="url(#glass)" pointer-events="none"/>
