@@ -9,7 +9,7 @@
       "chipFamily": "ESP32-S3",
       "parts": [
         {
-          "path": "firmware/sukra-mini-1.0.3.bin",
+          "path": "firmware/sukra-mini-185c-1.0.3.bin",
           "offset": 0
         }
       ]
